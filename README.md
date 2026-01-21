@@ -5,7 +5,7 @@ Um jogo de dedução e suspense desenvolvido com HTML5, CSS3 e JavaScript, utili
 
 ## 👥 Equipe
 * **Francisco Jardel Silva Magalhães** (Matrícula: 569919)
-* [Coloque o nome dos outros integrantes aqui]
+
 
 ---
 

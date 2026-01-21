@@ -20,12 +20,12 @@ const dados = {
 // ESTADO DO JOGO (Memória da rodada atual)
 let jogoAtual = {
     iniciado: false,
-    impostorIndex: -1, // Qual número é o impostor (ex: 3)
+    impostorIndex: -1, 
     palavraSecreta: "",
     tema: ""
 };
 
-// ROTA 1: INICIAR NOVA PARTIDA
+//  INICIAR NOVA PARTIDA
 app.post('/api/iniciar', (req, res) => {
     const { numJogadores } = req.body; // Recebe quantos vão jogar
     
@@ -52,7 +52,7 @@ app.post('/api/iniciar', (req, res) => {
     res.json({ mensagem: "Jogo iniciado!", totalJogadores: numJogadores });
 });
 
-// ROTA 2: REVELAR CARTA SECRETA
+// REVELAR CARTA SECRETA
 app.get('/api/virar-carta/:idJogador', (req, res) => {
     const idJogador = parseInt(req.params.idJogador);
 
@@ -72,14 +72,14 @@ app.get('/api/virar-carta/:idJogador', (req, res) => {
         // É INOCENTE
         res.json({
             papel: "inocente",
-            imagem: null, // Mantém a imagem do personagem
+            imagem: null, 
             texto: `A PALAVRA É: ${jogoAtual.palavraSecreta}`,
             dica: "Não deixe o impostor saber!"
         });
     }
 });
 
-/* --- NOVO: Endpoint para revelar quem era o impostor --- */
+/* Endpoint para revelar quem era o impostor */
 app.get('/api/revelar', (req, res) => {
     if (!jogoAtual) {
         return res.json({ erro: "Jogo não iniciado" });
@@ -91,7 +91,7 @@ app.get('/api/revelar', (req, res) => {
     });
 });
 
-/* --- ROTA GET #3: STATUS DO SISTEMA (Health Check) --- */
+/*  STATUS DO SISTEMA  */
 app.get('/api/status', (req, res) => {
     res.json({
         status: "Online",
