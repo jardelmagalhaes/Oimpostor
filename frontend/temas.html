@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo do Impostor | Temas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">🎭 Impostor</div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="regras.html">Regras</a></li>
+                <li><a href="sobre.html">Sobre</a></li>
+                <li><a href="contato.html">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="temas-container">
+            <h1>Escolha o Tema</h1>
+            <p>Veja as categorias disponíveis no servidor atualmente:</p>
+
+            <div id="lista-temas" class="grid-temas">
+                <p>Carregando temas...</p>
+            </div>
+
+            <a href="index.html" class="botao-principal" style="margin-top: 20px;">VOLTAR PARA O JOGO</a>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 - Francisco Jardel Silva Magalhães | UFC Quixadá</p>
+    </footer>
+
+    <script>
+        async function carregarTemas() {
+            try {
+                // Busca a lista de temas do seu server.js
+                const response = await fetch('http://localhost:3000/api/temas');
+                const temas = await response.json();
+
+                const container = document.getElementById('lista-temas');
+                container.innerHTML = ''; // Limpa o texto "Carregando..."
+
+                // Cria um cartão para cada tema
+                temas.forEach(tema => {
+                    const card = document.createElement('div');
+                    card.className = 'card-tema';
+                    card.innerHTML = `
+                        <div class="emoji-tema">${tema.emoji}</div>
+                        <h3>${tema.nome}</h3>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (erro) {
+                console.error("Erro:", erro);
+                document.getElementById('lista-temas').innerHTML = "<p>Erro ao carregar temas. Ligue o servidor!</p>";
+            }
+        }
+
+        // Chama a função assim que a página carrega
+        carregarTemas();
+    </script>
+
+</body>
+</html>

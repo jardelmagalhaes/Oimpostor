@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo do Impostor | Início</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">🎭 Quem é o Impostor?</div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Início</a></li>
+                <li><a href="regras.html">Regras</a></li>
+                <li><a href="sobre.html">Sobre</a></li>
+                <li><a href="contato.html">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="setup-jogo" class="hero">
+            
+            <h1 class="titulo-jogo">Configurar Missão</h1>
+
+            <div class="painel-config">
+                
+                <div class="config-item">
+                    <label>👥 JOGADORES</label>
+                    <div class="input-customizado">
+                        <button type="button" class="btn-menos" onclick="alterarValor('qtd-jogadores', -1)">−</button>
+                        <input type="number" id="qtd-jogadores" min="3" max="10" value="4" readonly>
+                        <button type="button" class="btn-mais" onclick="alterarValor('qtd-jogadores', 1)">+</button>
+                    </div>
+                    <small>Min: 3 | Max: 10</small>
+                </div>
+
+                <div class="config-item">
+                    <label>⏳ TEMPO (MIN)</label>
+                    <div class="input-customizado">
+                        <button type="button" class="btn-menos" onclick="alterarValor('tempo-jogo', -1)">−</button>
+                        <input type="number" id="tempo-jogo" min="1" max="5" value="2" readonly>
+                        <button type="button" class="btn-mais" onclick="alterarValor('tempo-jogo', 1)">+</button>
+                    </div>
+                    <small>Min: 1 | Max: 5</small>
+                </div>
+
+            </div>
+
+            <button onclick="iniciarJogo()" class="botao-start">
+                INICIAR MISSÃO
+            </button>
+
+        </section>
+        <section id="mesa-jogo" class="area-jogadores" style="display: none;">
+            
+            <h2 id="status-jogo">Clique na sua carta secretamente!</h2>
+
+            <div id="relogio-container" style="display: none;">
+        <div id="timer-display">00:00</div>
+        <p class="aviso-debate">Descubram o Impostor antes do tempo acabar!</p>
+
+        <div id="botoes-final" style="display: none; margin-top: 30px;">
+            <button onclick="revelarImpostor()" class="botao-revelar">👁️ QUEM ERA O IMPOSTOR?</button>
+            <br><br>
+            <button onclick="location.reload()" class="botao-reiniciar-pequeno">Jogar Novamente</button>
+        </div>
+    </div>
+
+            <div id="grid-cartas" class="grid-personagens"></div>
+            
+            <button onclick="location.reload()" class="botao-reiniciar">Reiniciar Jogo</button>
+        </section>
+
+        <div id="modal-secreto" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <img id="img-revelacao" src="" alt="Identidade" style="max-width: 150px; display:none;">
+                <h2 id="titulo-revelacao">...</h2>
+                <h1 id="palavra-revelacao" style="color: yellow; font-size: 3rem;">...</h1>
+                <p id="dica-revelacao">...</p>
+                <button onclick="fecharModal()" class="botao-principal">OK, ENTENDI (ESCONDER)</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 - Francisco Jardel Silva Magalhães | Engenharia de Software UFC</p>
+    </footer>
+    <script src="main.js"></script>
+    
+</body>
+</html>
