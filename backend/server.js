@@ -91,15 +91,16 @@ app.get('/api/revelar', (req, res) => {
     });
 });
 
-/*  STATUS DO SISTEMA  */
-app.get('/api/status', (req, res) => {
-    res.json({
-        status: "Online",
-        versao: "1.0.0",
-        mensagem: "Servidor operando normalmente"
+/* Endpoint para revelar quem era o impostor */
+app.get('/api/revelar', (req, res) => {
+    if (!jogoAtual.iniciado) {
+        return res.json({ erro: "Jogo não iniciado" });
+    }
+    
+    // CORREÇÃO: impostorIndex já está salvo no formato correto (1 a N), então removemos o "+ 1"
+    res.json({ 
+        idImpostor: jogoAtual.impostorIndex,
+        // Mantém a lógica de imagem (o jogador 1 usa a imagem 2.jpg)
+        imagem: `imagens/${jogoAtual.impostorIndex + 1 > 10 ? 2 : jogoAtual.impostorIndex + 1}.jpg`
     });
-});
-
-app.listen(port, () => {
-    console.log(`Servidor rodando na porta ${port}`);
 });
