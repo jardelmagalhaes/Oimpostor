@@ -1,5 +1,5 @@
-const CACHE_NAME = 'impostor-cache-v1';
-const urlsToCache = [
+
+const CACHE_NAME = 'impostor-cache-v2';const urlsToCache = [
   '/',
   '/index.html',
   '/regras.html',
