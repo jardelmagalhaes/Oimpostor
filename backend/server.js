@@ -81,26 +81,26 @@ app.get('/api/virar-carta/:idJogador', (req, res) => {
 
 /* Endpoint para revelar quem era o impostor */
 app.get('/api/revelar', (req, res) => {
-    if (!jogoAtual) {
-        return res.json({ erro: "Jogo não iniciado" });
-    }
-    // O ID do jogador é o índice + 1 (ex: índice 0 = Jogador 1)
-    res.json({ 
-        idImpostor: jogoAtual.impostorIndex + 1,
-        imagem: `imagens/${(jogoAtual.impostorIndex + 1) > 10 ? 2 : (jogoAtual.impostorIndex + 1) + 1}.jpg`
-    });
-});
-
-/* Endpoint para revelar quem era o impostor */
-app.get('/api/revelar', (req, res) => {
     if (!jogoAtual.iniciado) {
         return res.json({ erro: "Jogo não iniciado" });
     }
     
-    // CORREÇÃO: impostorIndex já está salvo no formato correto (1 a N), então removemos o "+ 1"
+    // O ID do jogador já está no formato correto de 1 a N
     res.json({ 
         idImpostor: jogoAtual.impostorIndex,
-        // Mantém a lógica de imagem (o jogador 1 usa a imagem 2.jpg)
         imagem: `imagens/${jogoAtual.impostorIndex + 1 > 10 ? 2 : jogoAtual.impostorIndex + 1}.jpg`
     });
+});
+
+/* STATUS DO SISTEMA  */
+app.get('/api/status', (req, res) => {
+    res.json({
+        status: "Online",
+        versao: "1.0.0",
+        mensagem: "Servidor operando normalmente"
+    });
+});
+
+app.listen(port, () => {
+    console.log(`Servidor rodando na porta ${port}`);
 });
