@@ -3,6 +3,7 @@ let totalJogadores = 0;
 let cartasAbertas = 0;
 let tempoDebate = 2;
 let jogoFinalizado = false;
+let nomesJogadores = {};
 
 /* --- FUNÇÃO 1: BOTÕES DE + E - (NOVA) --- */
 function alterarValor(idInput, valor) {
@@ -25,6 +26,7 @@ function alterarValor(idInput, valor) {
 async function iniciarJogo() {
 
     jogoFinalizado = false;
+    nomesJogadores = {};
     const qtdInput = document.getElementById('qtd-jogadores').value;
     const tempoInput = document.getElementById('tempo-jogo').value;
     
@@ -48,15 +50,17 @@ async function iniciarJogo() {
     }
 }
 
-/* --- FUNÇÃO 3: GERAR AS CARTAS --- */
+/* --- VARIÁVEL GLOBAL PARA SABER QUAL CARTA ESTÁ SENDO EDITADA --- */
+let cartaAtualId = null;
+
+/* --- FUNÇÃO 3: GERAR AS CARTAS (ATUALIZADA) --- */
 function gerarCartasNaTela(quantidade) {
     document.getElementById('setup-jogo').style.display = 'none';
     document.getElementById('mesa-jogo').style.display = 'flex';
     document.getElementById('relogio-container').style.display = 'none';
     
     const status = document.getElementById('status-jogo');
-    status.innerText = "Clique na sua carta secretamente!";
-    status.style.color = "white";
+    status.innerText = "Clique na sua carta para ver o segredo!";
 
     const grid = document.getElementById('grid-cartas');
     grid.style.display = 'flex';
@@ -66,14 +70,61 @@ function gerarCartasNaTela(quantidade) {
         let numImagem = i + 1; 
         if(numImagem > 10) numImagem = 2; 
 
+        /* MUDANÇAS AQUI:
+           1. Adicionamos id="legenda-jogador-${i}" no figcaption para poder mudar o texto depois.
+           2. Mudamos o onclick para "abrirModalNome(${i})" em vez de verificarPapel direto.
+        */
         const html = `
-            <figure id="carta-${i}" class="card" onclick="verificarPapel(${i})">
+            <figure id="carta-${i}" class="card" onclick="abrirModalNome(${i})">
                 <img src="imagens/${numImagem}.jpg" alt="Jogador ${i}">
-                <figcaption>Jogador ${i}</figcaption>
+                <figcaption id="legenda-jogador-${i}">Jogador ${i}</figcaption>
             </figure>
         `;
         grid.innerHTML += html;
     }
+}
+
+/* --- FUNÇÃO: ABRIR O MODAL DE NOME --- */
+function abrirModalNome(idJogador) {
+    // Guarda qual carta foi clicada para usarmos depois
+    cartaAtualId = idJogador;
+    
+    // Limpa o input para não vir com nome antigo
+    document.getElementById('input-nome-jogador').value = '';
+    
+    // Mostra a janelinha de digitar nome
+    document.getElementById('modal-nome').style.display = 'flex';
+    
+    // Já coloca o cursor no campo de texto para facilitar (Opcional)
+    document.getElementById('input-nome-jogador').focus();
+}
+
+/* --- FUNÇÃO: CONFIRMAR NOME E REVELAR --- */
+function confirmarNome() {
+    const input = document.getElementById('input-nome-jogador');
+    const novoNome = input.value.trim();
+
+    if (novoNome === "") {
+        alert("Por favor, digite um nome!");
+        return;
+    }
+
+    // 1. Salva o nome na memória do navegador
+    nomesJogadores[cartaAtualId] = novoNome; // <--- O PULO DO GATO ESTÁ AQUI!
+
+    // 2. Fecha o modal
+    document.getElementById('modal-nome').style.display = 'none';
+
+    // 3. Atualiza o visual da carta
+    const legenda = document.getElementById(`legenda-jogador-${cartaAtualId}`);
+    if (legenda) {
+        legenda.innerText = novoNome;
+        legenda.style.color = "#00ff00";
+        legenda.style.fontWeight = "bold";
+    }
+
+    // 4. Revela o papel
+    verificarPapel(cartaAtualId);
 }
 
 /* --- FUNÇÃO 4: VERIFICAR PAPEL --- */
@@ -174,7 +225,7 @@ function iniciarCronometro() {
     }, 1000);
 }
 
-/* --- NOVA FUNÇÃO: REVELAR QUEM ERA --- */
+/* --- NOVA FUNÇÃO: REVELAR QUEM ERA (CORRIGIDA E BLINDADA) --- */
 async function revelarImpostor() {
     try {
         const resposta = await fetch('http://localhost:3000/api/revelar');
@@ -184,22 +235,36 @@ async function revelarImpostor() {
         const titulo = document.getElementById('titulo-revelacao');
         const palavra = document.getElementById('palavra-revelacao');
         const dica = document.getElementById('dica-revelacao');
-        const img = document.getElementById('img-revelacao');
 
         modal.style.display = 'flex';
-        
         titulo.innerText = "A VERDADE FOI REVELADA!";
-        titulo.style.color = "#8a2be2"; // Roxo
+        titulo.style.color = "#8a2be2"; 
+
+        // --- CORREÇÃO AQUI ---
+        // 1. Forçamos o ID do servidor a virar texto (String) para evitar erro de tipo
+        const idImpostor = String(dados.idImpostor);
         
-        palavra.innerText = `JOGADOR ${dados.idImpostor}`;
+        // 2. Procuramos na lista. Se não achar, usa o padrão.
+        const nomeEncontrado = nomesJogadores[idImpostor];
+        
+        // 3. Debug para você ver no F12 se o nome estava salvo
+        console.log("ID do Impostor (Servidor):", idImpostor);
+        console.log("Lista de Nomes Salvos:", nomesJogadores);
+        console.log("Nome achado na lista:", nomeEncontrado);
+
+        // Se 'nomeEncontrado' existir, usa ele. Se não, usa "JOGADOR X"
+        const textoFinal = nomeEncontrado || `JOGADOR ${idImpostor}`;
+        
+        palavra.innerText = textoFinal.toUpperCase(); 
+        // ---------------------
+
         palavra.style.color = "red";
-        
         dica.innerText = "ERA O IMPOSTOR!";
 
     } catch (erro) {
-        console.error(erro);
+        console.error("Erro ao revelar:", erro);
     }
-} // <--- ESSA CHAVE AQUI ESTAVA FALTANDO/NO LUGAR ERRADO!
+}
 
 /* --- VERIFICAÇÃO DE STATUS (Health Check) --- */
 async function verificarStatusServidor() {
