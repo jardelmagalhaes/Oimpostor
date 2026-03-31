@@ -1,0 +1,22 @@
+{
+  "name": "Quem é o Impostor?",
+  "short_name": "Impostor",
+  "description": "Jogo de dedução e suspense.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#e6005c",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "imagens/icone-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "imagens/icone-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
