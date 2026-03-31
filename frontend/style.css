@@ -931,10 +931,16 @@ input[type=number]::-webkit-outer-spin-button {
 
     /* 2. TÍTULOS E TEXTOS */
     .titulo-jogo {
-        font-size: 2rem; /* Reduz o título gigante */
+        font-size: 2.2rem; /* Um tamanho bacana para celular */
         margin-bottom: 20px;
-        line-height: 1.1;
-        -webkit-text-stroke: 1px black; /* Borda mais fina */
+        line-height: 1.2; /* Aumentei um tiquinho pra uma palavra não encostar na outra */
+        -webkit-text-stroke: 1.5px black; /* Borda um pouco mais fina */
+        
+        /* O SEGREDO PARA CONSERTAR O BUG: */
+        /* Reduzimos a sombra dura de 5px para 2px no celular! */
+        text-shadow: 
+            2px 2px 0px #000, 
+            0 0 15px #8a2be2; 
     }
 
     /* 3. TELA INICIAL (Hero) */
