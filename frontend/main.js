@@ -35,7 +35,7 @@ async function iniciarJogo() {
     cartasAbertas = 0;
 
     try {
-        const resposta = await fetch('http://localhost:3000/api/iniciar', {
+        const resposta = await fetch('https://oimpostor-g5fh.onrender.com/api/iniciar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ numJogadores: totalJogadores })
@@ -146,7 +146,7 @@ async function verificarPapel(idJogador) {
     palavra.innerText = "???";
     img.style.display = 'none';
 
-    const resposta = await fetch(`http://localhost:3000/api/virar-carta/${idJogador}`);
+    const resposta = await fetch(`https://oimpostor-g5fh.onrender.com/api/virar-carta/${idJogador}`);
     const dados = await resposta.json();
 
     if (dados.papel === 'impostor') {
@@ -228,7 +228,7 @@ function iniciarCronometro() {
 /* --- NOVA FUNÇÃO: REVELAR QUEM ERA (CORRIGIDA E BLINDADA) --- */
 async function revelarImpostor() {
     try {
-        const resposta = await fetch('http://localhost:3000/api/revelar');
+        const resposta = await fetch('https://oimpostor-g5fh.onrender.com/api/revelar');
         const dados = await resposta.json();
 
         const modal = document.getElementById('modal-secreto');
@@ -271,7 +271,7 @@ async function verificarStatusServidor() {
     console.log("Tentando conectar ao servidor..."); 
 
     try {
-        const res = await fetch('http://localhost:3000/api/status');
+        const res = await fetch('https://oimpostor-g5fh.onrender.com/api/status');
         const dados = await res.json();
         console.log("Dados recebidos:", dados); 
 
