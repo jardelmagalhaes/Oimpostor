@@ -1,5 +1,6 @@
-
-const CACHE_NAME = 'impostor-cache-v2';const urlsToCache = [
+// Mudamos para v4 para forçar a atualização
+const CACHE_NAME = 'impostor-cache-v4';
+const urlsToCache = [
   '/',
   '/index.html',
   '/regras.html',
@@ -9,7 +10,7 @@ const CACHE_NAME = 'impostor-cache-v2';const urlsToCache = [
   '/js/main.js'
 ];
 
-// 1. Instala o Service Worker e guarda os arquivos no cache do celular
+// 1. Instala e guarda os arquivos
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -19,17 +20,31 @@ self.addEventListener('install', event => {
   );
 });
 
-// 2. Intercepta as requisições para usar o cache quando possível (Carregamento rápido)
+// 2. A MÁGICA DA LIMPEZA (É isso que faltava!)
+// Apaga qualquer cache antigo que não seja o v4
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cache => {
+          if (cache !== CACHE_NAME) {
+            console.log('PWA: Apagando cache antigo:', cache);
+            return caches.delete(cache);
+          }
+        })
+      );
+    })
+  );
+});
+
+// 3. Intercepta as requisições
 self.addEventListener('fetch', event => {
-  // Ignora chamadas para a nossa API do Render (para o jogo sempre pegar dados novos)
   if (event.request.url.includes('/api/')) {
       return; 
   }
-
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // Retorna o arquivo do cache se existir, senão baixa da internet
         return response || fetch(event.request);
       })
   );
